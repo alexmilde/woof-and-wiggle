@@ -12,6 +12,9 @@ export const load: PageServerLoad = async () => {
         host: PGHOST,
         database: PGDATABASE,
         port: Number(PGPORT),
+        ssl: {
+            rejectUnauthorized: false,
+        },
     })
 
     await client.connect()

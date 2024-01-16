@@ -1,7 +1,5 @@
 import type { Actions, PageServerLoad } from './$types'
 import pkg from 'pg'
-import fs from 'fs'
-import path from 'path'
 import pgvector from 'pgvector/pg'
 import { PGUSER, PGPASSWORD, PGHOST, PGDATABASE, PGPORT } from '$env/static/private'
 

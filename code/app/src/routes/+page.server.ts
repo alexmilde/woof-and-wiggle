@@ -32,7 +32,7 @@ const getDBClientConfig = () => {
 export const load: PageServerLoad = async () => {
     const client = new Client(getDBClientConfig())
     await client.connect()
-    const posts = await client.query('SELECT * from wp_posts_en where has_embeddings = false order by id')
+    const posts = await client.query('SELECT * from wp_posts_en order by id')
     await client.end()
 
     return {
@@ -51,8 +51,9 @@ export const actions = {
         const embedding = data.get('embedding')
 
         // INSERT INTO "public"."embeddings" ("embedding", "text") VALUES ('[0]', 'tetst');
-        const insert = 'INSERT INTO embeddings(embedding, post_title, post_guid) VALUES($1, $2,$3) RETURNING *'
-        const inserValues = [embedding, post_title, guid]
+        const insert =
+            'INSERT INTO embeddings(embedding, post_title, post_guid, post_id) VALUES($1, $2,$3, $4) RETURNING *'
+        const inserValues = [embedding, post_title, guid, post_id]
 
         const update = 'UPDATE wp_posts_en SET has_embeddings = true where id=$1'
         const updateValues = [post_id]
@@ -71,7 +72,7 @@ export const actions = {
         const data = await request.formData()
         const embedding = data.get('embedding') as string
         await client.connect()
-        const result = await client.query('SELECT * FROM embeddings ORDER BY embedding <-> $1 LIMIT 50', [
+        const result = await client.query('SELECT * FROM embeddings ORDER BY embedding <-> $1 LIMIT 6', [
             pgvector.toSql(
                 embedding.split(',').map(function (str) {
                     return parseFloat(str)

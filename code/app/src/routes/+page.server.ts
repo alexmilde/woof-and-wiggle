@@ -1,22 +1,36 @@
 import type { Actions, PageServerLoad } from './$types'
 import pkg from 'pg'
 import pgvector from 'pgvector/pg'
-import { PGUSER, PGPASSWORD, PGHOST, PGDATABASE, PGPORT } from '$env/static/private'
+import { PGUSER, PGPASSWORD, PGHOST, PGDATABASE, PGPORT, PGSSL } from '$env/static/private'
 
 const { Client } = pkg
 
-export const load: PageServerLoad = async () => {
-    const client = new Client({
+const addSslSettings = () => {
+    return PGSSL === 'false'
+        ? {}
+        : {
+              ssl: {
+                  rejectUnauthorized: false,
+              },
+          }
+}
+const getDBClientConfig = () => {
+    const baseConfig = {
         user: PGUSER,
         password: PGPASSWORD,
         host: PGHOST,
         database: PGDATABASE,
         port: Number(PGPORT),
-        ssl: {
-            rejectUnauthorized: false,
-        },
-    })
+    }
 
+    return {
+        ...baseConfig,
+        ...addSslSettings(),
+    }
+}
+
+export const load: PageServerLoad = async () => {
+    const client = new Client(getDBClientConfig())
     await client.connect()
     const posts = await client.query('SELECT * from wp_posts_en where has_embeddings = false order by id')
     await client.end()
@@ -28,13 +42,7 @@ export const load: PageServerLoad = async () => {
 
 export const actions = {
     saveEmbedding: async ({ request }) => {
-        const client = new Client({
-            user: PGUSER,
-            password: PGPASSWORD,
-            host: PGHOST,
-            database: PGDATABASE,
-            port: Number(PGPORT),
-        })
+        const client = new Client(getDBClientConfig())
 
         const data = await request.formData()
         const post_id = data.get('post_id')

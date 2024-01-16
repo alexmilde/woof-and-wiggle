@@ -60,7 +60,7 @@
         {#if !initialised}Loading{/if}
         {#if loading}Loading{/if}
     </div>
-    <div class="col-span-10 col-start-2 mb-4" class:opacity-20={!initialised}>
+    <div class="col-span-10 col-start-2 mt-2 mb-4" class:opacity-20={!initialised}>
         <form method="POST" action="?/search" use:enhance={search}>
             <input class="border px-2 py-2" bind:value={searchNeedle} name="search" />
             <button>Search</button>

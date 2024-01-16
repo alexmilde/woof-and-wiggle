@@ -6,7 +6,6 @@ import { PGUSER, PGPASSWORD, PGHOST, PGDATABASE, PGPORT, PGSSL } from '$env/stat
 const { Client } = pkg
 
 const addSslSettings = () => {
-    console.log('PGSSL' + PGSSL)
     return PGSSL === 'true'
         ? {}
         : {
@@ -32,7 +31,6 @@ const getDBClientConfig = () => {
 
 export const load: PageServerLoad = async () => {
     const client = new Client(getDBClientConfig())
-    console.log(getDBClientConfig())
     await client.connect()
     const posts = await client.query('SELECT * from wp_posts_en where has_embeddings = false order by id')
     await client.end()

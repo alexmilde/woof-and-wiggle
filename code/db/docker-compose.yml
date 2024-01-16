@@ -1,0 +1,16 @@
+# Compose a postgres database together with the extension pgvector
+name: woofandwiggle-postgres
+services:
+  db:
+    hostname: db
+    image: ankane/pgvector
+    ports:
+     - 5434:5432
+    restart: always
+    environment:
+      - POSTGRES_DB=woofandwiggle
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+     - ./init.sql:/docker-entrypoint-initdb.d/init.sql

@@ -7,7 +7,7 @@ const { Client } = pkg
 
 const addSslSettings = () => {
     console.log('PGSSL' + PGSSL)
-    return PGSSL === 'false'
+    return PGSSL === 'true'
         ? {}
         : {
               ssl: {

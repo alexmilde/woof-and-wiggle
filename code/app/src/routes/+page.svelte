@@ -1,6 +1,6 @@
 <script lang="ts">
     import { enhance } from '$app/forms'
-    import { HuggingFaceTransformersEmbeddings } from '@langchain/community/embeddings/hf_transformers'
+    import { HuggingFaceTransformersEmbeddings } from 'langchain/embeddings/hf_transformers'
     import { onMount } from 'svelte'
 
     export let data: {

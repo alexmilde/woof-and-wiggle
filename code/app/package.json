@@ -36,7 +36,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@langchain/community": "^0.0.17",
 		"pg": "^8.11.3",
 		"pgvector": "^0.1.7",
 		"vite-plugin-mkcert": "^1.17.1"

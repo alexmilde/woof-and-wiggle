@@ -6,6 +6,7 @@ import { PGUSER, PGPASSWORD, PGHOST, PGDATABASE, PGPORT, PGSSL } from '$env/stat
 const { Client } = pkg
 
 const addSslSettings = () => {
+    console.log('PGSSL' + PGSSL)
     return PGSSL === 'false'
         ? {}
         : {
@@ -21,14 +22,11 @@ const getDBClientConfig = () => {
         host: PGHOST,
         database: PGDATABASE,
         port: Number(PGPORT),
-        ssl: {
-            rejectUnauthorized: false,
-        },
     }
 
     return {
         ...baseConfig,
-        //...addSslSettings(),
+        ...addSslSettings(),
     }
 }
 
@@ -70,13 +68,7 @@ export const actions = {
     },
 
     search: async ({ request }) => {
-        const client = new Client({
-            user: PGUSER,
-            password: PGPASSWORD,
-            host: PGHOST,
-            database: PGDATABASE,
-            port: Number(PGPORT),
-        })
+        const client = new Client(getDBClientConfig())
 
         const data = await request.formData()
         const embedding = data.get('embedding') as string

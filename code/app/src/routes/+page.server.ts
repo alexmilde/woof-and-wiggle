@@ -21,16 +21,20 @@ const getDBClientConfig = () => {
         host: PGHOST,
         database: PGDATABASE,
         port: Number(PGPORT),
+        ssl: {
+            rejectUnauthorized: false,
+        },
     }
 
     return {
         ...baseConfig,
-        ...addSslSettings(),
+        //...addSslSettings(),
     }
 }
 
 export const load: PageServerLoad = async () => {
     const client = new Client(getDBClientConfig())
+    console.log(getDBClientConfig())
     await client.connect()
     const posts = await client.query('SELECT * from wp_posts_en where has_embeddings = false order by id')
     await client.end()
